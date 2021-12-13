@@ -5,6 +5,8 @@ from public import get_parsed_data
 from redis_cache import does_exist, get_redis, set_redis
 import os
 import json
+import datetime
+
 
 # dotenv env variables.
 load_dotenv()
@@ -59,7 +61,7 @@ def get_request_genre():
         print("data exists")
     else:
         dict_data = get_parsed_data(URL)
-        set_redis(REDIS_KEY, dict_data)
+        set_redis(REDIS_KEY, dict_data, datetime.timedelta(minutes=30))
 
     (
         genres,
