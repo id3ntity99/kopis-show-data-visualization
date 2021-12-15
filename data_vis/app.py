@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 from create_chart import create_double_line, create_double_bars
 from public import get_parsed_data
 from redis_cache import does_exist, get_redis, set_redis
+from extract_data import extract_day_data, extract_genre_data
 import os
 import json
 import datetime
@@ -12,32 +13,6 @@ import datetime
 load_dotenv()
 API_KEY_NAME = os.environ.get("API_KEY_NAME")
 API_KEY_VAL = os.environ.get("API_KEY_VALUE")
-
-
-def extract_day_data(data):
-    data = data["prfsts"]["prfst"]
-    data_length = len(data)
-    date = [data[i]["prfdt"] for i in range(data_length)]
-    open_cnt = [data[i]["prfprocnt"] for i in range(data_length)]
-    run_cnt = [data[i]["prfdtcnt"] for i in range(data_length)]
-    sales = [data[i]["amount"] for i in range(data_length)]
-    tickets = [data[i]["nmrs"] for i in range(data_length)]
-
-    return date, open_cnt, run_cnt, sales, tickets
-
-
-def extract_genre_data(data):
-    data = data["prfsts"]["prfst"]
-    data_length = len(data)
-    genres = [data[i]["cate"] for i in range(data_length)]
-    tickets = [data[i]["nmrs"] for i in range(data_length)]
-    sales = [data[i]["amount"] for i in range(data_length)]
-    sale_shr = [data[i]["amountshr"] for i in range(data_length)]
-    open_cnt = [data[i]["prfprocnt"] for i in range(data_length)]
-    run_cnt = [data[i]["prfdtcnt"] for i in range(data_length)]
-    aud_shr = [data[i]["nmrsshr"] for i in range(data_length)]
-
-    return genres, tickets, sales, sale_shr, open_cnt, run_cnt, aud_shr
 
 
 # Flask app
@@ -53,15 +28,16 @@ def get_request_genre():
     URL = (
         f"{BASE_URL}?{API_KEY_NAME}={API_KEY_VAL}&stdate={start_date}&eddate={end_date}"
     )
-    REDIS_KEY = f"/api/genre?filter={fltr}&stdate={start_date}&eddate={end_date}"
 
     # Check if data exists on Redis.
+    REDIS_KEY = f"/api/genre?filter={fltr}&stdate={start_date}&eddate={end_date}"
     if does_exist(REDIS_KEY):
         dict_data = get_redis(REDIS_KEY)
         print("data exists")
     else:
         dict_data = get_parsed_data(URL)
-        set_redis(REDIS_KEY, dict_data, datetime.timedelta(minutes=30))
+        time_out = datetime.timedelta(minutes=30)
+        set_redis(REDIS_KEY, dict_data, time_out)
 
     (
         genres,
@@ -113,5 +89,4 @@ def get_request_day():
 
 
 if __name__ == "__main__":
-    app.debug = False
-    app.run()
+    app.run(debug=True)

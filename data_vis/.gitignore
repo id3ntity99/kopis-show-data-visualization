@@ -1,4 +1,5 @@
 .env
 thinkpad.txt
 ref.txt
+api_url.txt
 __pycache__/
