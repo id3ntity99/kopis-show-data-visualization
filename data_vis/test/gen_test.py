@@ -1,10 +1,11 @@
 if __name__ == "__main__":
     if __package__ is None:
         import sys
+        import time
         from os import path
-
         sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
         from create_chart import create_double_bars
+        from pygal_test import create_bars
     else:
         from ..create_chart import create_double_bars
 
@@ -17,8 +18,15 @@ run_cnt = [100, 200, 400, 300, 200, 150, 100]
 aud_shr = [400, 300, 500, 400, 100, 500, 400]
 
 
+mpld3_t1 = time.time()
 create_double_bars("X Label", "Y Label", genres, tickets=tickets, sales=sales)
-create_double_bars("X Label", "Y Label", genres, open_count=open_cnt, run_count=run_cnt)
-create_double_bars(
-    "X Label", "Y Label", genres, sale_share=sale_shr, audience_share=aud_shr
-)
+mpld3_t2 = time.time()
+
+pygal_t1 = time.time()
+create_bars("X Label", "Y Label", genres, tickets=tickets, sales=sales)
+pygal_t2 = time.time()
+
+pygal_convert_time = pygal_t2 - pygal_t1
+mpld_convert_time = mpld3_t2 - mpld3_t1
+print(f"Converting time of pygal: {pygal_convert_time}")
+print(f"Converting time of mpld3: {mpld_convert_time}")
