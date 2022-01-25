@@ -2,7 +2,7 @@ from dotenv import load_dotenv
 from modules.request_api import Converter
 from modules.extract_data import GenreExtractor
 from modules.extract_data import DayExtractor
-from redis_cache import RedisCache
+from modules.redis_cache import RedisCache
 from flask import Blueprint
 from flask import request
 from flask import abort
