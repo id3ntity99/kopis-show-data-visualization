@@ -7,8 +7,8 @@ from dotenv import load_dotenv
 class RedisCache:
     def __init__(self, key):
         load_dotenv()
-        REDIS_HOST = os.environ.get("REDIS_HOST")
-        REDIS_PORT = os.environ.get("REDIS_PORT")
+        REDIS_HOST = os.getenv("REDIS_HOST")
+        REDIS_PORT = os.getenv("REDIS_PORT")
         self.r = redis.Redis(host=REDIS_HOST, port=REDIS_PORT)
         self.key = key
 

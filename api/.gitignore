@@ -4,3 +4,4 @@ ref.txt
 api_url.txt
 __pycache__/
 create_chart.py
+*.swp
