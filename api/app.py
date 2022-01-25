@@ -1,6 +1,6 @@
 from flask_cors import CORS
 from flask import Flask
-from views.genre import blueprint
+from views.blueprint import blueprint
 
 
 # dotenv env variables.
