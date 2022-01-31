@@ -9,6 +9,7 @@ fullpath = os.path.abspath(os.path.join(currentdir, srcdir))
 sys.path.insert(0, fullpath)
 
 from app import create_app
+from utils.logger.logger import Logger
 
 
 class TestApi(unittest.TestCase):
@@ -17,6 +18,7 @@ class TestApi(unittest.TestCase):
         app.config["TESTING"] = True
         app.config["DEBUG"] = True
         self.tester = app.test_client()
+        self.logger = Logger()
 
     def test_get_genre(self):
         start_test = time.time()
@@ -25,7 +27,7 @@ class TestApi(unittest.TestCase):
             200,
             response.status_code,
         )
-        msg = "[TEST] | Runtime: {}".format(time.time() - start_test)
+        msg = "Runtime: {}".format(time.time() - start_test)
         print(msg)
 
 
