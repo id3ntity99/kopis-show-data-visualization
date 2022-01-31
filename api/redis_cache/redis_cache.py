@@ -19,7 +19,6 @@ class RedisCache:
     def set_redis(self, value, expr):
         to_json = json.dumps(value)
         self.r.set(self.key, to_json, expr)
-        print(f"{self.key} is saved completely")
 
     def does_exist(self):
         if self.r.get(self.key) is None:
